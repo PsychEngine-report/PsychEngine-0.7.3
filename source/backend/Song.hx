@@ -49,13 +49,14 @@ class Song
 	public var player1:String = 'bf';
 	public var player2:String = 'dad';
 	public var gfVersion:String = 'gf';
+	public var format:String = 'psych_v1';
 
-	private static function onLoadJson(songJson:Dynamic) // Convert old charts to newest format
+	public static function convert(songJson:Dynamic) // Convert old charts to psych_v1 format
 	{
 		if(songJson.gfVersion == null)
 		{
 			songJson.gfVersion = songJson.player3;
-			songJson.player3 = null;
+			if(Reflect.hasField(songJson, 'player3')) Reflect.deleteField(songJson, 'player3');
 		}
 
 		if(songJson.events == null)
@@ -81,7 +82,32 @@ class Song
 				}
 			}
 		}
+
+		var sectionsData:Array<SwagSection> = songJson.notes;
+		if(sectionsData == null) return;
+
+		for (section in sectionsData)
+		{
+			var beats:Null<Float> = cast section.sectionBeats;
+			if (beats == null || Math.isNaN(beats))
+			{
+				section.sectionBeats = 4;
+				if(Reflect.hasField(section, 'lengthInSteps')) Reflect.deleteField(section, 'lengthInSteps');
+			}
+
+			for (note in section.sectionNotes)
+			{
+				var gottaHitNote:Bool = (note[1] < 4) ? section.mustHitSection : !section.mustHitSection;
+				note[1] = (note[1] % 4) + (gottaHitNote ? 0 : 4);
+
+				if(!Std.isOfType(note[3], String))
+					note[3] = Note.defaultNoteTypes[note[3]]; //compatibility with Week 7 and 0.1-0.3 psych charts
+			}
+		}
 	}
+
+	public static var chartPath:String;
+	public static var loadedSongName:String;
 
 	public function new(song, notes, bpm)
 	{
@@ -136,14 +162,32 @@ class Song
 				daSong = songData.song;
 				daBpm = songData.bpm; */
 
-		var songJson:Dynamic = parseJSONshit(rawJson);
+		var songJson:Dynamic = parseAny(rawJson);
 		if(jsonInput != 'events') StageData.loadDirectory(songJson);
 		onLoadJson(songJson);
 		return songJson;
 	}
 
-	public static function parseJSONshit(rawJson:String):SwagSong
-	{
-		return cast Json.parse(rawJson).song;
-	}
+	public static function parseAny(raw:String):SwagSong {
+    var data:Dynamic = Json.parse(raw);
+
+    // OLD format: { song: {...} }
+    if (Reflect.hasField(data, "song")) {
+        var song:SwagSong = cast data.song;
+        return song;
+    }
+
+    // NEW format: flat + optional conversion
+    var songJson:SwagSong = cast data;
+
+    var fmt:String = songJson.format;
+    if (fmt == null) fmt = songJson.format = "unknown";
+
+    if (!fmt.startsWith("psych_v1")) {
+        songJson.format = "psych_v1_convert";
+        convert(songJson);
+    }
+
+    return songJson;
+}
 }

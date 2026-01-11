@@ -222,6 +222,7 @@ class Paths
 	public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
 	static public function image(key:String, ?library:String = null, ?allowGPU:Bool = true):FlxGraphic
 	{
+		key = Language.getFileTranslation('images/$key') + '.png';
 		var bitmap:BitmapData = null;
 		var file:String = null;
 
@@ -319,6 +320,7 @@ class Paths
 
 	inline static public function font(key:String)
 	{
+		var folderKey:String = Language.getFileTranslation('fonts/$key');
 		#if MODS_ALLOWED
 		var file:String = modsFont(key);
 		if(FileSystem.exists(file)) {
