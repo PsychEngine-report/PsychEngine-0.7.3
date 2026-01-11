@@ -4,6 +4,7 @@ import haxe.Json;
 import lime.utils.Assets;
 
 import backend.Section;
+import objects.Note;
 
 typedef SwagSong =
 {
@@ -18,6 +19,7 @@ typedef SwagSong =
 	var player2:String;
 	var gfVersion:String;
 	var stage:String;
+	var format:String;
 
 	@:optional var gameOverChar:String;
 	@:optional var gameOverSound:String;
@@ -28,6 +30,17 @@ typedef SwagSong =
 
 	@:optional var arrowSkin:String;
 	@:optional var splashSkin:String;
+}
+
+typedef SwagSection =
+{
+	var sectionNotes:Array<Dynamic>;
+	var sectionBeats:Float;
+	var mustHitSection:Bool;
+	@:optional var altAnim:Bool;
+	@:optional var gfSection:Bool;
+	@:optional var bpm:Float;
+	@:optional var changeBPM:Bool;
 }
 
 class Song
@@ -164,7 +177,7 @@ class Song
 
 		var songJson:Dynamic = parseAny(rawJson);
 		if(jsonInput != 'events') StageData.loadDirectory(songJson);
-		onLoadJson(songJson);
+		LoadFromJson(songJson);
 		return songJson;
 	}
 

@@ -335,9 +335,6 @@ class AlphaCharacter extends FlxSprite
 		'•'  => {anim: 'bullet', offsets: [0, 18], offsetsBold: [0, 20]}
 	];
 
-	public var image(default, set):String;
-
-	public static var allLetters:Map<String, Null<Letter>>;
 
 	public static function loadAlphabetData(request:String = 'alphabet')
 	{
