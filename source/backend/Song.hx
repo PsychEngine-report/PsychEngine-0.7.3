@@ -6,7 +6,7 @@ import lime.utils.Assets;
 import backend.Section;
 import objects.Note;
 
-typedef SwagSong =
+typedef Song =
 {
 	var song:String;
 	var notes:Array<SwagSection>;
@@ -19,7 +19,7 @@ typedef SwagSong =
 	var player2:String;
 	var gfVersion:String;
 	var stage:String;
-	var format:String;
+	@:optional var format:String;
 
 	@:optional var gameOverChar:String;
 	@:optional var gameOverSound:String;
@@ -114,7 +114,7 @@ class Song
 				note[1] = (note[1] % 4) + (gottaHitNote ? 0 : 4);
 
 				if(!Std.isOfType(note[3], String))
-					note[3] = Note.defaultNoteTypes[note[3]]; //compatibility with Week 7 and 0.1-0.3 psych charts
+					note[3] = Note.defaultNoteSkin[note[3]]; //compatibility with Week 7 and 0.1-0.3 psych charts
 			}
 		}
 	}
@@ -129,7 +129,7 @@ class Song
 		this.bpm = bpm;
 	}
 
-	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong
+	public static function loadFromJson(jsonInput:String, ?folder:String):Song
 	{
 		var rawJson = null;
 		
@@ -177,21 +177,27 @@ class Song
 
 		var songJson:Dynamic = parseAny(rawJson);
 		if(jsonInput != 'events') StageData.loadDirectory(songJson);
-		LoadFromJson(songJson);
+		loadFromJson(songJson);
 		return songJson;
 	}
 
-	public static function parseAny(raw:String):SwagSong {
+	public static function loadFromJson(songJson:Dynamic):Song
+{
+    return loadFromJson(songJson);
+}
+
+
+	public static function parseAny(raw:String):Song {
     var data:Dynamic = Json.parse(raw);
 
     // OLD format: { song: {...} }
     if (Reflect.hasField(data, "song")) {
-        var song:SwagSong = cast data.song;
+        var song:SSong = cast data.song;
         return song;
     }
 
     // NEW format: flat + optional conversion
-    var songJson:SwagSong = cast data;
+    var songJson:Song = cast data;
 
     var fmt:String = songJson.format;
     if (fmt == null) fmt = songJson.format = "unknown";

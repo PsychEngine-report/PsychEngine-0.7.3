@@ -207,6 +207,23 @@ class ChartingState extends MusicBeatState
 				speed: 1,
 				stage: 'stage'
 			};
+			else if (_song.format == null)
+    _				song.format = "psych_v1";
+			{
+				_song = {
+    			format: "psych_v1",
+    			song: 'Test',
+    			notes: [],
+    			events: [],
+    			bpm: 150.0,
+    			needsVoices: true,
+    			player1: 'bf',
+    			player2: 'dad',
+    			gfVersion: 'gf',
+    			speed: 1,
+    			stage: 'stage'
+			};	
+			}
 			addSection();
 			PlayState.SONG = _song;
 		}

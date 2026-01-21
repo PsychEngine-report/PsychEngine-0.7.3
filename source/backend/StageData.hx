@@ -176,7 +176,7 @@ class StageData {
 				case 'square', 'sprite', 'animatedSprite':
 					if(!ignoreFilters && !validateVisibility(data.filters)) continue;
 
-					var spr:FlxSpriteSprite = new FlxSprite(data.x, data.y);
+					var spr:FlxSprite = new FlxSprite(data.x, data.y);
 					spr.ID = num;
 					if(data.type != 'square')
 					{
