@@ -24,7 +24,7 @@ import backend.Mods;
 
 class Paths
 {
-	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
+	inline public static var SOUND_EXT = #if web "mp3" #elseif ios "ogg" #else "ogg" #end;
 	inline public static var VIDEO_EXT = "mp4";
 
 	public static function excludeAsset(key:String) {
@@ -205,16 +205,33 @@ class Paths
 
 	inline static public function voices(song:String, postfix:String = null):Any
 	{
-		var songKey:String = '${formatToSongPath(song)}/Voices';
+		var songPath:String = formatToSongPath(song);
+		var songKey:String = songPath + "/Voices";
+
 		if(postfix != null) songKey += '-' + postfix;
-		//trace('songKey test: $songKey');
+
+		// if Voices.ogg doesn't exist try lowercase
+		if(!Paths.fileExists('songs/' + songKey + '.ogg', SOUND))
+		{
+			songKey = songPath + "/voices";
+			if(postfix != null) songKey += '-' + postfix;
+		}
+
 		var voices = returnSound(null, songKey, 'songs');
 		return voices;
 	}
 
 	inline static public function inst(song:String):Any
 	{
-		var songKey:String = '${formatToSongPath(song)}/Inst';
+		var songPath:String = formatToSongPath(song);
+		var songKey:String = songPath + "/Inst";
+
+		// fallback for lowercase inst
+		if(!Paths.fileExists('songs/' + songKey + '.ogg', SOUND))
+		{
+			songKey = songPath + "/inst";
+		}
+
 		var inst = returnSound(null, songKey, 'songs');
 		return inst;
 	}
@@ -338,7 +355,7 @@ class Paths
 			for(mod in Mods.getGlobalMods())
 				if (FileSystem.exists(mods('$mod/$key')))
 					return true;
-				#if (android || linux)
+				#if (android || linux || ios)
 				else if (FileSystem.exists(findFile('$mod/$key')))
 					return true;
 				#end
@@ -348,7 +365,7 @@ class Paths
 			
 			if (FileSystem.exists(mods('$key')))
 				return true;
-			#if (android || linux)
+			#if (android || linux || ios)
 			else if (FileSystem.exists(findFile(key)))
 				return true;
 			#end
@@ -538,7 +555,7 @@ class Paths
 			var fileToCheck:String = mods(Mods.currentModDirectory + '/' + key);
 			if(FileSystem.exists(fileToCheck))
 				return fileToCheck;
-				#if (android || linux)
+				#if (android || linux || ios)
 				else
 				{
 					var newPath:String = findFile(key);
@@ -552,7 +569,7 @@ class Paths
 			var fileToCheck:String = mods(mod + '/' + key);
 			if(FileSystem.exists(fileToCheck))
 				return fileToCheck;
-			#if (android || linux)
+			#if (android || linux || ios)
 			else
 			{
 				var newPath:String = findFile(key);
@@ -565,7 +582,7 @@ class Paths
 		return #if mobile Sys.getCwd() + #end 'mods/' + key;
 	}
 
-	#if (android || linux)
+	#if (android || linux || ios)
 	static function findFile(key:String):String {
 		var targetParts:Array<String> = key.replace('\\', '/').split('/');
 		if (targetParts.length == 0) return null;
