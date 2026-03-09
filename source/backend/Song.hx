@@ -10,7 +10,7 @@ import objects.Note;
 typedef SwagSong =
 {
 	var song:String;
-	var notes:Array<SwagSection>;
+	var notes:Array<SwagSong>;
 	var events:Array<Dynamic>;
 	var bpm:Float;
 	var needsVoices:Bool;
