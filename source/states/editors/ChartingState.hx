@@ -214,6 +214,7 @@ class ChartingState extends MusicBeatState
         	PlayState.SONG = _song;
     	}
 	}
+}
 
 		// Paths.clearMemory();
 
