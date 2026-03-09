@@ -21,6 +21,10 @@ typedef Song =
 	var stage:String;
 	@:optional var format:String;
 
+	@:optional var gfPosition:Array<Float>;
+	@:optional var player1Position:Array<Float>;
+	@:optional var player2Position:Array<Float>;
+
 	@:optional var gameOverChar:String;
 	@:optional var gameOverSound:String;
 	@:optional var gameOverLoop:String;
@@ -177,36 +181,60 @@ class Song
 
 		var songJson:Dynamic = parseAny(rawJson);
 		if(jsonInput != 'events') StageData.loadDirectory(songJson);
-		loadFromJson(songJson);
 		return songJson;
 	}
+	public static function applyPsychV1Defaults(songJson:Dynamic)
+	{
+    // Characters
+    if(songJson.player1 == null) songJson.player1 = "bf";
+    if(songJson.player2 == null) songJson.player2 = "dad";
+    if(songJson.gfVersion == null) songJson.gfVersion = "gf";
 
-	public static function loadFromJson(songJson:Dynamic):Song
-{
-    return loadFromJson(songJson);
-}
+    // Stage
+    if(songJson.stage == null) songJson.stage = "stage";
 
+    // Speed
+    if(songJson.speed == null) songJson.speed = 1;
 
-	public static function parseAny(raw:String):Song {
+    // Voices
+    if(songJson.needsVoices == null) songJson.needsVoices = true;
+
+    // Events
+    if(songJson.events == null) songJson.events = [];
+
+    // Psych v1 new fields
+    if(!Reflect.hasField(songJson, "gfPosition")) songJson.gfPosition = [0,0];
+	if(!Reflect.hasField(songJson, "player1Position")) songJson.player1Position = [770,100];
+	if(!Reflect.hasField(songJson, "player2Position")) songJson.player2Position = [100,100];
+	}
+
+	public static function parseAny(raw:String):Song
+	{
     var data:Dynamic = Json.parse(raw);
 
-    // OLD format: { song: {...} }
-    if (Reflect.hasField(data, "song")) {
-        var song:SSong = cast data.song;
-        return song;
-    }
+    // OLD format { song: {...} }
+    if (Reflect.hasField(data, "song"))
+        data = data.song;
 
-    // NEW format: flat + optional conversion
-    var songJson:Song = cast data;
+    var songJson:Dynamic = data;
+
+    // Apply compatibility fixes
+    applyPsychV1Defaults(songJson);
 
     var fmt:String = songJson.format;
     if (fmt == null) fmt = songJson.format = "unknown";
 
-    if (!fmt.startsWith("psych_v1")) {
+    if (!fmt.startsWith("psych_v1"))
+    {
         songJson.format = "psych_v1_convert";
         convert(songJson);
     }
 
-    return songJson;
-}
+    return cast songJson;
+	}
+	public static function loadFromJson(songJson:Dynamic):Song
+	{
+    applyPsychV1Defaults(songJson);
+    return cast songJson;
+	}
 }
