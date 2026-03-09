@@ -6,7 +6,7 @@ import lime.utils.Assets;
 import backend.Section;
 import objects.Note;
 
-typedef Song =
+typedef SwagSong =
 {
 	var song:String;
 	var notes:Array<SwagSection>;
@@ -133,7 +133,7 @@ class Song
 		this.bpm = bpm;
 	}
 
-	public static function loadFromJson(jsonInput:String, ?folder:String):Song
+	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong
 	{
 		var rawJson = null;
 		
@@ -208,7 +208,7 @@ class Song
 	if(!Reflect.hasField(songJson, "player2Position")) songJson.player2Position = [100,100];
 	}
 
-	public static function parseAny(raw:String):Song
+	public static function parseAny(raw:String):SwagSong
 	{
     var data:Dynamic = Json.parse(raw);
 
