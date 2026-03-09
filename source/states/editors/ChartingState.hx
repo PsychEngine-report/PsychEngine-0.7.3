@@ -186,47 +186,38 @@ class ChartingState extends MusicBeatState
 	];
 
 	var text:String = "";
-	public static var vortex:Bool = false;
-	public var mouseQuant:Bool = false;
-	override function create()
+	override function create() 
 	{
-		if (PlayState.SONG != null)
-			_song = PlayState.SONG;
-		else
-		{
-			Difficulty.resetList();
-			_song = {
-				song: 'Test',
-				notes: [],
-				events: [],
-				bpm: 150.0,
-				needsVoices: true,
-				player1: 'bf',
-				player2: 'dad',
-				gfVersion: 'gf',
-				speed: 1,
-				stage: 'stage'
-			};
-			else if (_song.format == null)
-    _				song.format = "psych_v1";
-			{
-				_song = {
-    			format: "psych_v1",
-    			song: 'Test',
-    			notes: [],
-    			events: [],
-    			bpm: 150.0,
-    			needsVoices: true,
-    			player1: 'bf',
-    			player2: 'dad',
-    			gfVersion: 'gf',
-    			speed: 1,
-    			stage: 'stage'
-			};	
-			}
-			addSection();
-			PlayState.SONG = _song;
-		}
+    	if (PlayState.SONG != null) {
+        	_song = PlayState.SONG;
+    	} else {
+       		Difficulty.resetList();
+
+        // Create a basic song object for testing
+        _song = {
+            song: 'Test',
+            notes: [],
+            events: [],
+            bpm: 150.0,
+            needsVoices: true,
+            player1: 'bf',
+            player2: 'dad',
+            gfVersion: 'gf',
+            speed: 1,
+            stage: 'stage',
+            format: 'psych_v1',      // <- include format from start
+            gfPosition: [0, 0],
+            player1Position: [770, 100],
+            player2Position: [100, 100]
+        };
+
+        		// Cast it as a SwagSong so ChartingState knows the type
+        		_song = cast _song;
+
+       			 addSection();
+        		PlayState.SONG = _song;
+    		}	
+		}	
 
 		// Paths.clearMemory();
 
