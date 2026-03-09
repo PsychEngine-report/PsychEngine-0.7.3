@@ -6,7 +6,7 @@ import lime.utils.Assets;
 import backend.Section;
 import objects.Note;
 
-typedef SwagSong =
+typedef SwagSection =
 {
 	var song:String;
 	var notes:Array<SwagSection>;
@@ -19,6 +19,14 @@ typedef SwagSong =
 	var player2:String;
 	var gfVersion:String;
 	var stage:String;
+	var sectionNotes:Array<Dynamic>;
+	var sectionBeats:Float;
+	var mustHitSection:Bool;
+	@:optional var altAnim:Bool;
+	@:optional var gfSection:Bool;
+	@:optional var bpm:Float;
+	@:optional var changeBPM:Bool;
+	
 	@:optional var format:String;
 
 	@:optional var gfPosition:Array<Float>;
@@ -34,17 +42,6 @@ typedef SwagSong =
 
 	@:optional var arrowSkin:String;
 	@:optional var splashSkin:String;
-}
-
-typedef SwagSection =
-{
-	var sectionNotes:Array<Dynamic>;
-	var sectionBeats:Float;
-	var mustHitSection:Bool;
-	@:optional var altAnim:Bool;
-	@:optional var gfSection:Bool;
-	@:optional var bpm:Float;
-	@:optional var changeBPM:Bool;
 }
 
 class Song
