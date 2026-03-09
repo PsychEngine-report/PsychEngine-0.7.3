@@ -49,11 +49,6 @@ typedef SwagSection =
 
 class Song
 {
-	public var song:String;
-	public var notes:Array<SwagSection>;
-	public var events:Array<Dynamic>;
-	public var bpm:Float;
-	public var needsVoices:Bool = true;
 	public var arrowSkin:String;
 	public var splashSkin:String;
 	public var gameOverChar:String;
@@ -61,11 +56,6 @@ class Song
 	public var gameOverLoop:String;
 	public var gameOverEnd:String;
 	public var disableNoteRGB:Bool = false;
-	public var speed:Float = 1;
-	public var stage:String;
-	public var player1:String = 'bf';
-	public var player2:String = 'dad';
-	public var gfVersion:String = 'gf';
 	public var format:String = 'psych_v1';
 
 	public static function convert(songJson:Dynamic) // Convert old charts to psych_v1 format
