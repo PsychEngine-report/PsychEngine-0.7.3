@@ -42,7 +42,7 @@ class OutdatedState extends MusicBeatState
 		if(!leftState) {
 			if (controls.ACCEPT) {
 				leftState = true;
-				CoolUtil.browserLoad("https://github.com/Ethantobot11/PsychEngine-0.7.3/releases");
+				CoolUtil.browserLoad("https://github.com/PsychEngine-report/PsychEngine-0.7.3/blob/d33d18a4e4270844925acd68a455d6dc9194b5ad/gitVersion.txt");
 			}
 			else if(controls.BACK) {
 				leftState = true;
