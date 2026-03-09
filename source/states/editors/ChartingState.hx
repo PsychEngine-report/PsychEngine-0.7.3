@@ -185,7 +185,6 @@ class ChartingState extends MusicBeatState
 		192
 	];
 
-	var text:String = "";
 	override function create() 
 	{
     	if (PlayState.SONG != null) {
@@ -193,31 +192,28 @@ class ChartingState extends MusicBeatState
     	} else {
        		Difficulty.resetList();
 
-        // Create a basic song object for testing
-        _song = {
-            song: 'Test',
-            notes: [],
-            events: [],
-            bpm: 150.0,
-            needsVoices: true,
-            player1: 'bf',
-            player2: 'dad',
-            gfVersion: 'gf',
-            speed: 1,
-            stage: 'stage',
-            format: 'psych_v1',      // <- include format from start
-            gfPosition: [0, 0],
-            player1Position: [770, 100],
-            player2Position: [100, 100]
-        };
+        // initialize default song
+        var defaultSong:backend.Song = new backend.Song(
+            "Test",        // song name
+            [],            // notes
+            150.0          // bpm
+        );
 
-        		// Cast it as a SwagSong so ChartingState knows the type
-        		_song = cast _song;
+        	// set extra fields
+        	defaultSong.needsVoices = true;
+        	defaultSong.player1 = "bf";
+        	defaultSong.player2 = "dad";
+        	defaultSong.gfVersion = "gf";
+        	defaultSong.speed = 1;
+        	defaultSong.stage = "stage";
+        	defaultSong.format = "psych_v1";
+        	defaultSong.events = [];
 
-       			 addSection();
-        		PlayState.SONG = _song;
-			}
-		}
+        	addSection();
+        	_song = defaultSong;
+        	PlayState.SONG = _song;
+    	}
+	}
 
 		// Paths.clearMemory();
 
